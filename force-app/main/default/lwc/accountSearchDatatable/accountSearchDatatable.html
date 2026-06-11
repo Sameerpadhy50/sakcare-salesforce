@@ -1,0 +1,57 @@
+<template>
+    <lightning-card title="Account Search Results" icon-name="standard:account">
+        <div class="slds-m-around_medium">
+
+            <!-- Loading Spinner -->
+            <template lwc:if={isLoading}>
+                <lightning-spinner
+                    alternative-text="Loading accounts..."
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+            <!-- Error State -->
+            <template lwc:if={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_medium" role="alert">
+                    <lightning-icon
+                        icon-name="utility:error"
+                        alternative-text="Error"
+                        size="small"
+                        class="slds-m-right_x-small">
+                    </lightning-icon>
+                    <h2>{errorMessage}</h2>
+                </div>
+            </template>
+
+            <!-- Data Table -->
+            <template lwc:if={hasData}>
+                <p class="slds-text-body_small slds-m-bottom_small slds-text-color_weak">
+                    Showing {recordCount} most recent account(s)
+                </p>
+                <lightning-datatable
+                    key-field="Id"
+                    data={accounts}
+                    columns={columns}
+                    hide-checkbox-column
+                    sorted-by={sortedBy}
+                    sorted-direction={sortedDirection}
+                    onsort={handleSort}
+                    resize-column-disabled>
+                </lightning-datatable>
+            </template>
+
+            <!-- Empty State -->
+            <template lwc:if={isEmpty}>
+                <div class="slds-illustration slds-illustration_small slds-m-top_medium">
+                    <lightning-icon
+                        icon-name="utility:search"
+                        size="large"
+                        class="slds-m-bottom_small">
+                    </lightning-icon>
+                    <p class="slds-text-heading_small">No account records found.</p>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
