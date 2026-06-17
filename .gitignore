@@ -1,0 +1,10 @@
+# Documentation — shared externally, not committed to repo
+docs/
+
+# npm
+node_modules/
+package-lock.json
+
+# Salesforce
+.sf/
+.sfdx/

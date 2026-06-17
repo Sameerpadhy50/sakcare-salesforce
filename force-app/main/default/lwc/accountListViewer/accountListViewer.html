@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Top 5 Accounts" icon-name="standard:account">
+        <div class="slds-p-around_small">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:elseif={error}>
+                <div class="slds-text-color_error">
+                    {error}
+                </div>
+            </template>
+
+            <template lwc:else>
+                <lightning-datatable
+                    key-field="Id"
+                    data={accounts}
+                    columns={columns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+        </div>
+    </lightning-card>
+</template>

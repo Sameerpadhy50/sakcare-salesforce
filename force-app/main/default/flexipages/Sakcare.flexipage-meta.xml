@@ -78,14 +78,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>c:formData</componentName>
-                <identifier>c_formData_sakcare</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>c:accountSearchDatatable</componentName>
-                <identifier>c_accountSearchDatatable</identifier>
+                <componentName>c:accountListViewer</componentName>
+                <identifier>c_accountListViewer</identifier>
             </componentInstance>
         </itemInstances>
         <name>region3</name>
