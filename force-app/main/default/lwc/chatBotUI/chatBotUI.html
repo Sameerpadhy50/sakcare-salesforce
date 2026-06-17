@@ -1,0 +1,164 @@
+<template>
+    <!-- Floating Launcher (when closed) -->
+    <!-- <template if:false={isGrid}> -->
+        <template if:false={isChatOpen}>
+            <div class="chat-launcher" onclick={toggleChat} title="Open chat">
+                <!-- <img src={botLogo} alt="Agent" class="launcher-logo" /> -->
+                <c-agent-icon color={userBubbleTheme}></c-agent-icon>
+
+                <span class="launcher-text">{chatBotTitle}</span>
+            </div>
+        </template>
+    <!-- </template> -->
+
+    <!-- Chat Popup -->
+    <template if:true={isChatVisible}>
+        <section class={chatPopupClass} role="dialog" aria-label="Chat window">
+
+            <c-sak-care_chat-header is-grid={isGrid} ontoggleexpand={handleExpandToggle} onmenuselect={handleMenuSelect}
+                onclosechat={toggleChat} onopencallassistant={handleCallAssistance} chat-bot-title={chatBotTitle}
+                color={userBubbleTheme} show-social-config={showSocialOpen} config-dislike-response={configDislikeResponse}
+                config-like-response={configLikeResponse} config-read-aloud={configReadAloud}
+                config-request-regenerate={configRequestRegenerate} config-select-agent={configSelectAgent}
+                config-video-agent={configVideoAgent} config-copy-response-text={configCopyResponseText}
+                config-call-agent={configCallAgent} selected-agent={selectedAgent} onagentname={handleAgentName}>
+            </c-sak-care_chat-header>
+
+            <!-- Messages area -->
+            <template if:false={showCallAssistant}>
+
+                <div class="chat-body">
+                    <div class="welcome-header">
+                        <h2 class="welcome-title">
+                            How can <span class="brand-name" style={brandNameStyle}>{chatBotTitle}</span> help?
+                        </h2>
+                    </div>
+
+                    <template for:each={messages} for:item="msg">
+                        <!-- Agent Message -->
+                        <template if:true={msg.isAgent}>
+                            <div key={msg.id} class="msg-row agent">
+                                <div class="avatar">
+                                    <!-- <img src={botLogo} alt="Agent" /> -->
+                                    <c-agent-icon color={userBubbleTheme}></c-agent-icon>
+
+                                </div>
+
+                                <div class="msg-container agent-container">
+                                    <!-- Chat bubble -->
+                                    <div class="msg-bubble agent-bubble">
+                                        <template if:true={msg.isTyping}>
+                                            <div class="typing-dots"><span></span><span></span><span></span></div>
+                                        </template>
+                                        <template if:false={msg.isTyping}>
+                                            <!-- <div class="msg-text">{msg.text}</div> -->
+                                            <lightning-formatted-rich-text value={msg.text}
+                                                class="msg-text"></lightning-formatted-rich-text>
+
+                                        </template>
+                                    </div>
+
+                                    <!-- Below bubble: actions + timestamp -->
+                                    <div class="msg-footer-row agent-footer">
+                                        <div class="msg-actions-row">
+                                            <template if:true={configCopyResponseText}>
+
+                                                <button class="action-icon" data-id={msg.id} data-action="copy" title="Copy"
+                                                    onclick={handleCopy}>
+                                                    <lightning-icon icon-name="utility:copy"
+                                                        size="xx-small"></lightning-icon>
+                                                </button>
+                                            </template>
+                                            <template if:true={configLikeResponse}>
+
+                                                <button class="action-icon" data-id={msg.id} data-action="like" title="Like"
+                                                    onclick={handleLike}>
+                                                    <lightning-icon icon-name="utility:like"
+                                                        size="xx-small"></lightning-icon>
+                                                </button>
+                                            </template>
+
+                                            <template if:true={configDislikeResponse}>
+
+                                                <button class="action-icon" data-id={msg.id} data-action="dislike"
+                                                    title="Dislike" onclick={handleDislike}>
+                                                    <lightning-icon icon-name="utility:dislike"
+                                                        size="xx-small"></lightning-icon>
+                                                </button>
+                                            </template>
+
+                                            <template if:true={configReadAloud}>
+
+                                                <button class="action-icon" data-id={msg.id} title="Read Aloud"
+                                                    onclick={handleReadAloud}>
+                                                    <lightning-icon icon-name="utility:volume_high"
+                                                        size="xx-small"></lightning-icon>
+                                                </button>
+                                            </template>
+
+                                            <template if:true={configRequestRegenerate}>
+
+                                                <button class="action-icon" data-id={msg.id} title="Regenerate"
+                                                    onclick={handleRegenerate}>
+                                                    <lightning-icon icon-name="utility:refresh"
+                                                        size="xx-small"></lightning-icon>
+                                                </button>
+                                            </template>
+                                        </div>
+
+                                        <div class="msg-meta">
+                                            <span class="msg-time">{msg.time}</span>
+                                            <template if:true={msg.delay}>
+                                                <span class="msg-delay">({msg.delay}s)</span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- User Message -->
+                        <template if:false={msg.isAgent}>
+                            <div key={msg.id} class="msg-row user">
+                                <div class="msg-container user-container">
+                                    <!-- Chat bubble -->
+                                    <div class="msg-bubble user-bubble">
+                                        <div class="msg-text">{msg.text}</div>
+                                    </div>
+
+                                    <!-- Below bubble -->
+                                    <div class="msg-footer-row user-footer">
+                                        <div class="msg-meta user-meta">
+                                            <span class="msg-time">{msg.time}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="avatar">
+                                    <img src={userPhoto} alt="You" />
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
+                </div>
+            </template>
+
+            <template if:true={showCallAssistant}>
+                <c-sak-care_call-assistant is-chat-active={isChatActive}
+                    onclosecallassistant={closeCallAssistance} activeagent={activeAgent} ></c-sak-care_call-assistant>
+            </template>
+
+
+            <template if:true={isLoading}>
+                <c-sak-care_shimmerui bot-logo={botLogo} color={userBubbleTheme}></c-sak-care_shimmerui>
+            </template>
+            <template if:false={showCallAssistant}>
+                <c-sak-care_chat-footer user-input={userInput} microphone-icon={microphoneIcon}
+                    oninputchange={handleFooterInputChange} onsendmessage={handleFooterSendMessage}
+                    onvoiceinput={handleFooterVoiceInput}>
+                </c-sak-care_chat-footer>
+            </template>
+        </section>
+    </template>
+</template>
